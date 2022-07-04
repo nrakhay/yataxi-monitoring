@@ -1,6 +1,6 @@
 import React from "react";
 
-function Prices() {
+const Prices = () => {
   return (
     <div className="component-container prices">
       <div className="price-output current-price-container">
@@ -21,6 +21,6 @@ function Prices() {
       </div>
     </div>
   );
-}
+};
 
 export default Prices;
