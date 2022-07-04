@@ -5,7 +5,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-const UserInput = ({ isLoaded }) => {
+const UserInput = ({ isLoaded, onSelect }) => {
   const {
     value,
     suggestions: { status, data },
@@ -39,6 +39,7 @@ const UserInput = ({ isLoaded }) => {
       getGeocode({ address: description }).then((results) => {
         const { lat, lng } = getLatLng(results[0]);
         console.log("📍 Coordinates: ", { lat, lng });
+        onSelect({ lat, lng });
       });
     };
 

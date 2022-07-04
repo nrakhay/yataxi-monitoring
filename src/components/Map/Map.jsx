@@ -7,11 +7,6 @@ const containerStyle = {
   height: "100%",
 };
 
-const center = {
-  lng: 76.90414653118162,
-  lat: 43.23981336939662,
-};
-
 const defaultOptions = {
   panControl: true,
   zoomControl: true,
@@ -27,7 +22,7 @@ const defaultOptions = {
   styles: Theme,
 };
 
-const Map = () => {
+const Map = ({ center, zoom }) => {
   const mapRef = React.useRef();
 
   const onLoad = React.useCallback(function callback(map) {
@@ -43,7 +38,7 @@ const Map = () => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={13}
+        zoom={zoom}
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={defaultOptions}
