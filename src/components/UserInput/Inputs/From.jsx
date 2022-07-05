@@ -5,7 +5,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-function From({ isLoaded, onSelect }) {
+function From({ center, isLoaded, onSelect }) {
   const {
     value,
     suggestions: { status, data },
@@ -13,6 +13,11 @@ function From({ isLoaded, onSelect }) {
     init,
     clearSuggestions,
   } = usePlacesAutocomplete({
+    // requestOptions: {
+    //   types: "address",
+    //   radius: 20000,
+    //   location: new window.google.maps.LatLng(43.23981336939662, 76.90414653118162),
+    // },
     initOnMount: false,
     debounce: 300,
   });

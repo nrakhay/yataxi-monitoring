@@ -2,11 +2,11 @@ import React from "react";
 import From from "./Inputs/From";
 import To from "./Inputs/To";
 
-const UserInput = ({ isLoaded, onSelect }) => {
+const UserInput = ({ center, isLoaded, onSelect }) => {
   return (
     <div className="component-container user-input">
       <div className="address-container">
-        <From isLoaded={isLoaded} onSelect={onSelect} />
+        <From center={center} isLoaded={isLoaded} onSelect={onSelect} />
         <To isLoaded={isLoaded} onSelect={onSelect} />
       </div>
       <div className="classes-container">

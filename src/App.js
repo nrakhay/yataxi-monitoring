@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useCallback } from "react";
 import "./App.css";
 import UserInput from "./components/UserInput/UserInput";
 import Map from "./components/Map/Map";
@@ -11,15 +11,15 @@ const API_KEY = process.env.REACT_APP_MAPS_API;
 const libraries = ["places"];
 
 const defaultCenter = {
-  lng: 76.90414653118162,
   lat: 43.23981336939662,
+  lng: 76.90414653118162,
 };
 
 const defaultZoom = 13;
 
 function App() {
-  const [center, setCenter] = React.useState(defaultCenter);
-  const [zoom, setZoom] = React.useState(defaultZoom);
+  const [center, setCenter] = useState(defaultCenter);
+  const [zoom, setZoom] = useState(defaultZoom);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -27,7 +27,7 @@ function App() {
     libraries,
   });
 
-  const onPlaceSelect = React.useCallback((coordinates) => {
+  const onPlaceSelect = useCallback((coordinates) => {
     setCenter(coordinates);
     setZoom(15);
   }, []);
@@ -35,7 +35,7 @@ function App() {
   return (
     <div className="main-container">
       {isLoaded ? <Map center={center} zoom={zoom} /> : <h2>Loading</h2>}
-      <UserInput isLoaded={isLoaded} onSelect={onPlaceSelect} />
+      <UserInput center={center} isLoaded={isLoaded} onSelect={onPlaceSelect} />
       <Prices />
     </div>
   );

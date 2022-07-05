@@ -1,6 +1,7 @@
-import React from "react";
+import { useRef, useCallback } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { Theme } from "./Theme";
+import FirstLocation from "../Markers/FirstLocation";
 
 const containerStyle = {
   width: "100%",
@@ -23,13 +24,13 @@ const defaultOptions = {
 };
 
 const Map = ({ center, zoom }) => {
-  const mapRef = React.useRef();
+  const mapRef = useRef();
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = useCallback(function callback(map) {
     mapRef.current = map;
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = useCallback(function callback(map) {
     mapRef.current = undefined;
   }, []);
 
@@ -42,7 +43,9 @@ const Map = ({ center, zoom }) => {
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={defaultOptions}
-      ></GoogleMap>
+      >
+        <FirstLocation position={center} />
+      </GoogleMap>
     </div>
   );
 };
