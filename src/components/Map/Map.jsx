@@ -1,7 +1,9 @@
 import { useRef, useCallback } from "react";
-import { GoogleMap } from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import { Theme } from "./Theme";
 import FirstLocation from "../Markers/FirstLocation";
+import { useEffect, useState } from "react";
+// import MarkerIcon from "../../map-marker.svg";
 
 const containerStyle = {
   width: "100%",
@@ -34,6 +36,10 @@ const Map = ({ center, zoom }) => {
     mapRef.current = undefined;
   }, []);
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => setIsMounted(true), []);
+
   return (
     <div className="component-container map">
       <GoogleMap
@@ -44,7 +50,7 @@ const Map = ({ center, zoom }) => {
         onUnmount={onUnmount}
         options={defaultOptions}
       >
-        <FirstLocation position={center} />
+        {isMounted && <FirstLocation position={center} />}
       </GoogleMap>
     </div>
   );

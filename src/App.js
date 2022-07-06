@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import "./App.css";
 import UserInput from "./components/UserInput/UserInput";
 import Map from "./components/Map/Map";
-import Prices from "./components/Prices/Prices";
+// import Prices from "./components/Prices/Prices";
+import getBrowserLocation from "./utils/geolocation";
 
 import { useJsApiLoader } from "@react-google-maps/api";
 
@@ -32,11 +33,21 @@ function App() {
     setZoom(15);
   }, []);
 
+  useEffect(() => {
+    getBrowserLocation()
+      .then((userLoc) => {
+        setCenter(userLoc);
+      })
+      .catch((defaultLocation) => {
+        setCenter(defaultLocation);
+      });
+  }, []);
+
   return (
     <div className="main-container">
       {isLoaded ? <Map center={center} zoom={zoom} /> : <h2>Loading</h2>}
       <UserInput center={center} isLoaded={isLoaded} onSelect={onPlaceSelect} />
-      <Prices />
+      {/* <Prices /> */}
     </div>
   );
 }
