@@ -5,7 +5,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-function From({ center, isLoaded, onSelect }) {
+function From({ isLoaded, onFirstCoordSelect, getFromInput }) {
   const {
     value,
     suggestions: { status, data },
@@ -23,7 +23,7 @@ function From({ center, isLoaded, onSelect }) {
   });
   const ref = useOnclickOutside(() => {
     // When user clicks outside of the component, we can dismiss
-    // the searched suggestions by calling this method
+    // the searched suggestionСатпаева 2s by calling this method
     clearSuggestions();
   });
 
@@ -40,11 +40,13 @@ function From({ center, isLoaded, onSelect }) {
       setValue(description, false);
       clearSuggestions();
 
+      getFromInput(description);
+
       // Get latitude and longitude via utility functions
       getGeocode({ address: description }).then((results) => {
         const { lat, lng } = getLatLng(results[0]);
-        console.log("📍 Coordinates: ", { lat, lng });
-        onSelect({ lat, lng });
+        // console.log("📍 Coordinates: ", { lat, lng });
+        onFirstCoordSelect({ lat, lng });
       });
     };
 
@@ -61,7 +63,7 @@ function From({ center, isLoaded, onSelect }) {
           key={place_id}
           onClick={handleSelect(suggestion)}
         >
-          <span className="main-suggestion">{main_text}</span>{" "}
+          <span className="main-suggestion">{main_text}</span>
           <span className="secondary-suggestion">{secondary_text}</span>
         </li>
       );

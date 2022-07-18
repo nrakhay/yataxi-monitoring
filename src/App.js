@@ -2,12 +2,17 @@ import { useState, useCallback, useEffect } from "react";
 import "./App.css";
 import UserInput from "./components/UserInput/UserInput";
 import Map from "./components/Map/Map";
-// import Prices from "./components/Prices/Prices";
+import Prices from "./components/Prices/Prices";
 import getBrowserLocation from "./utils/geolocation";
 
+import { middlePoint } from "./functions/midpoint";
+
+import axios from "axios";
 import { useJsApiLoader } from "@react-google-maps/api";
 
-const API_KEY = process.env.REACT_APP_MAPS_API;
+const API_MAPS = process.env.REACT_APP_MAPS_API;
+const API_TAXI = process.env.REACT_APP_YATAXI_API;
+const CLID_TAXI = process.env.REACT_APP_YATAXI_CLID;
 
 const libraries = ["places"];
 
@@ -19,35 +24,139 @@ const defaultCenter = {
 const defaultZoom = 13;
 
 function App() {
-  const [center, setCenter] = useState(defaultCenter);
+  const [centerAB, setCenterAB] = useState(defaultCenter);
+  const [isComplete, setIsComplete] = useState("false");
+  const [pointA, setPointA] = useState(undefined);
+  const [pointB, setPointB] = useState(undefined);
   const [zoom, setZoom] = useState(defaultZoom);
+  const [fromInput, setFromInput] = useState("");
+  const [toInput, setToInput] = useState("");
+  const [rate, setRate] = useState("econom");
+  const [fromLat, setFromLat] = useState("");
+  const [fromLng, setFromLng] = useState("");
+  const [toLat, setToLat] = useState("");
+  const [toLng, setToLng] = useState("");
+
+  const [minPrice, setMinPrice] = useState("");
+  const [curPrice, setCurPrice] = useState("");
+
+  const [submitted, setSubmitted] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: API_KEY,
+    googleMapsApiKey: API_MAPS,
     libraries,
   });
 
-  const onPlaceSelect = useCallback((coordinates) => {
-    setCenter(coordinates);
+  const onFirstCoordSelect = useCallback((coordinates) => {
+    setPointA(coordinates);
     setZoom(15);
+    setFromLat(coordinates.lat);
+    setFromLng(coordinates.lng);
   }, []);
+
+  const onSecondCoordSelect = (coordinates) => {
+    setPointB(coordinates);
+    setZoom(15);
+    setToLat(coordinates.lat);
+    setToLng(coordinates.lng);
+    console.log(fromLat, fromLng, toLat, toLng);
+  };
+
+  useEffect(() => {
+    if (fromLat && fromLng && toLat && toLng) {
+      const midLng = middlePoint(fromLat, fromLng, toLat, toLng)[0];
+      const midLat = middlePoint(fromLat, fromLng, toLat, toLng)[1];
+
+      setCenterAB({ lat: midLat, lng: midLng });
+      console.log(midLat, midLng);
+      setIsComplete(true);
+    }
+  }, [fromLat, fromLng, toLat, toLng]);
+
+  console.log(fromLat, fromLng, toLat, toLng);
 
   useEffect(() => {
     getBrowserLocation()
       .then((userLoc) => {
-        setCenter(userLoc);
+        setPointA(userLoc);
       })
       .catch((defaultLocation) => {
-        setCenter(defaultLocation);
+        setPointA(defaultLocation);
       });
   }, []);
 
+  const getFromInput = (val) => {
+    setFromInput(val);
+  };
+
+  const getToInput = (val) => {
+    setToInput(val);
+  };
+
+  const handleRateChange = (val) => {
+    setRate(val);
+  };
+
+  const handleCancel = () => {
+    setSubmitted(false);
+  };
+
+  const coordinates = fromLng + "," + fromLat + "~" + toLng + "," + toLat;
+
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault(); // no refresh
+
+    await axios
+      .get(`https://taxi-routeinfo.taxi.yandex.net/taxi_info`, {
+        params: {
+          rll: coordinates,
+          clid: CLID_TAXI,
+          apikey: API_TAXI,
+          class: rate,
+        },
+        headers: {
+          Accept: "*/*",
+        },
+      })
+      .then((response) => {
+        setMinPrice(response.data.options[0].min_price);
+        setCurPrice(response.data.options[0].price);
+      });
+
+    setSubmitted(true);
+  };
+
   return (
     <div className="main-container">
-      {isLoaded ? <Map center={center} zoom={zoom} /> : <h2>Loading</h2>}
-      <UserInput center={center} isLoaded={isLoaded} onSelect={onPlaceSelect} />
-      {/* <Prices /> */}
+      {isLoaded ? (
+        <Map
+          {...{
+            centerAB,
+            pointA,
+            pointB,
+            isComplete,
+            zoom,
+            fromInput,
+            toInput,
+          }}
+        />
+      ) : (
+        <h2>Loading</h2>
+      )}
+      <UserInput
+        {...{
+          isLoaded,
+          getFromInput,
+          getToInput,
+          handleRateChange,
+          handleSearchSubmit,
+          rate,
+          onFirstCoordSelect,
+          onSecondCoordSelect,
+        }}
+      />
+      {submitted && <Prices {...{ minPrice, curPrice, handleCancel }} />}
     </div>
   );
 }

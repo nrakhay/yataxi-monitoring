@@ -5,7 +5,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-function To({ isLoaded, onSelect }) {
+function To({ isLoaded, onSecondCoordSelect, getToInput }) {
   const {
     value,
     suggestions: { status, data },
@@ -35,11 +35,13 @@ function To({ isLoaded, onSelect }) {
       setValue(description, false);
       clearSuggestions();
 
+      getToInput(description);
+
       // Get latitude and longitude via utility functions
       getGeocode({ address: description }).then((results) => {
         const { lat, lng } = getLatLng(results[0]);
         console.log("📍 Coordinates: ", { lat, lng });
-        onSelect({ lat, lng });
+        onSecondCoordSelect({ lat, lng });
       });
     };
 
@@ -70,7 +72,7 @@ function To({ isLoaded, onSelect }) {
 
   return (
     <>
-      <div className="address to-address">
+      <div className="address to-address" ref={ref}>
         <input
           className="address-input"
           type="text"

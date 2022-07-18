@@ -1,9 +1,9 @@
-import { useRef, useCallback } from "react";
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import { useRef, useCallback, useEffect, useState } from "react";
+import { GoogleMap } from "@react-google-maps/api";
 import { Theme } from "./Theme";
 import FirstLocation from "../Markers/FirstLocation";
-import { useEffect, useState } from "react";
-// import MarkerIcon from "../../map-marker.svg";
+import SecondLocation from "../Markers/SecondLocation";
+// import Direction from "../../Direction/Direction";
 
 const containerStyle = {
   width: "100%",
@@ -25,7 +25,15 @@ const defaultOptions = {
   styles: Theme,
 };
 
-const Map = ({ center, zoom }) => {
+const Map = ({
+  centerAB,
+  isComplete,
+  pointA,
+  pointB,
+  zoom,
+  fromInput,
+  toInput,
+}) => {
   const mapRef = useRef();
 
   const onLoad = useCallback(function callback(map) {
@@ -44,13 +52,17 @@ const Map = ({ center, zoom }) => {
     <div className="component-container map">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={center}
+        center={isComplete === true ? centerAB : pointA}
         zoom={zoom}
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={defaultOptions}
       >
-        {isMounted && <FirstLocation position={center} />}
+        {isMounted && <FirstLocation position={pointA} />}
+        {isMounted && <SecondLocation position={pointB} />}
+        {/* {fromInput && toInput && (
+          <Direction fromInput={fromInput} toInput={toInput} />
+        )} */}
       </GoogleMap>
     </div>
   );
