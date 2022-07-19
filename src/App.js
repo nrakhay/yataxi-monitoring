@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import UserInput from "./components/UserInput/UserInput";
 import Map from "./components/Map/Map";
 import Prices from "./components/Prices/Prices";
 import getBrowserLocation from "./utils/geolocation";
 
-import { middlePoint } from "./functions/midpoint";
+import { middlePoint } from "./utils/midpoint";
 
 import axios from "axios";
 import { useJsApiLoader } from "@react-google-maps/api";
@@ -38,8 +38,7 @@ function App() {
   const [toLng, setToLng] = useState("");
 
   const [minPrice, setMinPrice] = useState("");
-  const [curPrice, setCurPrice] = useState("");
-
+  const [startPrice, setStartPrice] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
@@ -48,19 +47,18 @@ function App() {
     libraries,
   });
 
-  const onFirstCoordSelect = useCallback((coordinates) => {
+  const onFirstCoordSelect = (coordinates) => {
     setPointA(coordinates);
     setZoom(15);
     setFromLat(coordinates.lat);
     setFromLng(coordinates.lng);
-  }, []);
+  };
 
   const onSecondCoordSelect = (coordinates) => {
     setPointB(coordinates);
-    setZoom(15);
+    // setZoom(15);
     setToLat(coordinates.lat);
     setToLng(coordinates.lng);
-    console.log(fromLat, fromLng, toLat, toLng);
   };
 
   useEffect(() => {
@@ -69,12 +67,10 @@ function App() {
       const midLat = middlePoint(fromLat, fromLng, toLat, toLng)[1];
 
       setCenterAB({ lat: midLat, lng: midLng });
-      console.log(midLat, midLng);
+
       setIsComplete(true);
     }
   }, [fromLat, fromLng, toLat, toLng]);
-
-  console.log(fromLat, fromLng, toLat, toLng);
 
   useEffect(() => {
     getBrowserLocation()
@@ -106,7 +102,6 @@ function App() {
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault(); // no refresh
-
     await axios
       .get(`https://taxi-routeinfo.taxi.yandex.net/taxi_info`, {
         params: {
@@ -121,7 +116,7 @@ function App() {
       })
       .then((response) => {
         setMinPrice(response.data.options[0].min_price);
-        setCurPrice(response.data.options[0].price);
+        setStartPrice(response.data.options[0].price);
       });
 
     setSubmitted(true);
@@ -156,7 +151,17 @@ function App() {
           onSecondCoordSelect,
         }}
       />
-      {submitted && <Prices {...{ minPrice, curPrice, handleCancel }} />}
+      {submitted && (
+        <Prices
+          {...{
+            minPrice,
+            startPrice,
+            handleCancel,
+            rate,
+            coordinates,
+          }}
+        />
+      )}
     </div>
   );
 }

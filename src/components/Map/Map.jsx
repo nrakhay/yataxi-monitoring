@@ -1,9 +1,12 @@
+/* global google */
 import { useRef, useCallback, useEffect, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { Theme } from "./Theme";
 import FirstLocation from "../Markers/FirstLocation";
 import SecondLocation from "../Markers/SecondLocation";
 // import Direction from "../../Direction/Direction";
+
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 const containerStyle = {
   width: "100%",
@@ -34,6 +37,8 @@ const Map = ({
   fromInput,
   toInput,
 }) => {
+  const { winWidth, winHeight } = useWindowSize();
+
   const mapRef = useRef();
 
   const onLoad = useCallback(function callback(map) {
@@ -48,15 +53,64 @@ const Map = ({
 
   useEffect(() => setIsMounted(true), []);
 
+  const getBoundsZoomLevel = () => {
+    const southWest = new google.maps.LatLng(pointA.lat, pointA.lng);
+    const northEast = new google.maps.LatLng(pointB.lat, pointB.lng);
+    const bounds = new google.maps.LatLngBounds(southWest, northEast);
+    const mapDimensions = {
+      height: winHeight * 0.8,
+      width: winWidth * 0.8,
+    };
+
+    const WORLD_DIM = { height: 256, width: 256 };
+    const ZOOM_MAX = 19;
+
+    const latRad = (lat) => {
+      var sin = Math.sin((lat * Math.PI) / 180);
+      var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+      return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+    };
+
+    const zoom = (mapPx, worldPx, fraction) => {
+      return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+    };
+
+    const ne = bounds.getNorthEast();
+    const sw = bounds.getSouthWest();
+
+    const latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+    const lngDiff = ne.lng() - sw.lng();
+    const lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
+
+    console.log(
+      mapDimensions.height,
+      WORLD_DIM.height,
+      latFraction,
+      "lat zoom"
+    );
+    const latZoom = zoom(mapDimensions.height, WORLD_DIM.height, latFraction);
+    const lngZoom = zoom(mapDimensions.width, WORLD_DIM.width, lngFraction);
+
+    console.log(latZoom, lngZoom, ZOOM_MAX);
+    return Math.min(lngZoom, ZOOM_MAX);
+  };
+
+  // const ret = getBoundsZoomLevel();
+  // console.log(ret);
+
+  // console.log(pointA && pointB ? "alala" : "undefined");
+
   return (
     <div className="component-container map">
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={isComplete === true ? centerAB : pointA}
-        zoom={zoom}
+        zoom={pointA && pointB ? getBoundsZoomLevel() : zoom}
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={defaultOptions}
+        id="map-component"
       >
         {isMounted && <FirstLocation position={pointA} />}
         {isMounted && <SecondLocation position={pointB} />}

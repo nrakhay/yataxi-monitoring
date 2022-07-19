@@ -40,7 +40,7 @@ function To({ isLoaded, onSecondCoordSelect, getToInput }) {
       // Get latitude and longitude via utility functions
       getGeocode({ address: description }).then((results) => {
         const { lat, lng } = getLatLng(results[0]);
-        console.log("📍 Coordinates: ", { lat, lng });
+        // console.log("📍 Coordinates: ", { lat, lng });
         onSecondCoordSelect({ lat, lng });
       });
     };
