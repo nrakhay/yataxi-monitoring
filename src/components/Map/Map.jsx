@@ -59,7 +59,7 @@ const Map = ({
     const bounds = new google.maps.LatLngBounds(southWest, northEast);
     const mapDimensions = {
       height: winHeight * 0.8,
-      width: winWidth * 0.8,
+      width: winWidth * 0.6,
     };
 
     const WORLD_DIM = { height: 256, width: 256 };
