@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useJsApiLoader } from "@react-google-maps/api";
 
-import UserInput from "../UserInput/UserInput";
-import Map from "../Map/Map";
-import Prices from "../Prices/Prices";
+import UserInput from "./components/UserInput/UserInput";
+import Map from "./components/Map/Map";
+import Prices from "./components/Prices/Prices";
 
 import getBrowserLocation from "../../utils/geolocation";
 import { middlePoint } from "../../utils/midpoint";

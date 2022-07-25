@@ -6,7 +6,7 @@ import FirstLocation from "../Markers/FirstLocation";
 import SecondLocation from "../Markers/SecondLocation";
 // import Direction from "../../Direction/Direction";
 
-import { useWindowSize } from "../../hooks/useWindowSize";
+import { useWindowSize } from "../../../../hooks/useWindowSize";
 
 const containerStyle = {
   width: "100%",
@@ -56,7 +56,7 @@ const Map = ({
   const getBoundsZoomLevel = () => {
     const southWest = new google.maps.LatLng(pointA.lat, pointA.lng);
     const northEast = new google.maps.LatLng(pointB.lat, pointB.lng);
-    const bounds = new google.maps.LatLngBounds(southWest, northEast);
+    const bounds = new google.maps.LatLngBounds(northEast, southWest);
     const mapDimensions = {
       height: winHeight * 0.8,
       width: winWidth * 0.6,
@@ -65,35 +65,32 @@ const Map = ({
     const WORLD_DIM = { height: 256, width: 256 };
     const ZOOM_MAX = 19;
 
-    const latRad = (lat) => {
+    function latRad(lat) {
       var sin = Math.sin((lat * Math.PI) / 180);
       var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
       return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
-    };
+    }
 
-    const zoom = (mapPx, worldPx, fraction) => {
+    function zoom(mapPx, worldPx, fraction) {
       return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
-    };
+    }
 
-    const ne = bounds.getNorthEast();
-    const sw = bounds.getSouthWest();
+    var ne = bounds.getNorthEast();
+    var sw = bounds.getSouthWest();
 
-    const latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+    var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
 
-    const lngDiff = ne.lng() - sw.lng();
-    const lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
+    var lngDiff = ne.lng() - sw.lng();
+    var lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
 
-    console.log(
-      mapDimensions.height,
-      WORLD_DIM.height,
-      latFraction,
-      "lat zoom"
-    );
-    const latZoom = zoom(mapDimensions.height, WORLD_DIM.height, latFraction);
-    const lngZoom = zoom(mapDimensions.width, WORLD_DIM.width, lngFraction);
+    var latZoom = zoom(mapDimensions.height, WORLD_DIM.height, latFraction);
+    var lngZoom = zoom(mapDimensions.width, WORLD_DIM.width, lngFraction);
 
-    console.log(latZoom, lngZoom, ZOOM_MAX);
-    return Math.min(lngZoom, ZOOM_MAX);
+    if (isNaN(latZoom)) {
+      return 13;
+    }
+
+    return Math.min(latZoom, lngZoom, ZOOM_MAX);
   };
 
   // const ret = getBoundsZoomLevel();

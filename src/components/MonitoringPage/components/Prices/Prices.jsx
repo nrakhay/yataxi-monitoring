@@ -27,7 +27,7 @@ const Prices = ({ minPrice, startPrice, handleCancel, rate, coordinates }) => {
 
   useEffect(() => {
     setInterval(updatePrice, 15000);
-  }, []);
+  });
 
   return (
     <div className="component-container prices">
