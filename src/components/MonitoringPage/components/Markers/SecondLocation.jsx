@@ -1,8 +1,10 @@
 import { Marker } from "@react-google-maps/api";
-import Aidar from "../../../../assets/AidarVec.svg";
+import markerTo from "../../../../assets/flag.svg";
 
 const SecondLocation = ({ position }) => {
-  return <Marker position={position} draggable={true} icon={{ url: Aidar }} />;
+  return (
+    <Marker position={position} draggable={true} icon={{ url: markerTo }} />
+  );
 };
 
 export default SecondLocation;

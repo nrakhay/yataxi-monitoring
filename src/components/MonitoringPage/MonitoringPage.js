@@ -25,7 +25,7 @@ const defaultCenter = {
 
 const defaultZoom = 13;
 
-function Monitoring() {
+export const Monitoring = () => {
   const [centerAB, setCenterAB] = useState(defaultCenter);
   const [isComplete, setIsComplete] = useState("false");
   const [pointA, setPointA] = useState(undefined);
@@ -166,6 +166,4 @@ function Monitoring() {
       )}
     </div>
   );
-}
-
-export default Monitoring;
+};
