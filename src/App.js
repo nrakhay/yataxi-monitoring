@@ -21,6 +21,7 @@ function App() {
           path="/"
           element={
             <div className="landing-container">
+              {loginClicked ? <LoginPopup toggle={togglePopup} /> : null}
               <header>
                 <div className="nav-container">
                   <a href="/">
@@ -35,8 +36,6 @@ function App() {
                   </div>
                 </div>
               </header>
-
-              {loginClicked ? <LoginPopup toggle={togglePopup} /> : null}
 
               <div className="body-wrapper">
                 <div className="body-container">
