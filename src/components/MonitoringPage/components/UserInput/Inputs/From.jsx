@@ -1,4 +1,5 @@
 import React from "react";
+import markerFrom from "../../../../../assets/marker.svg";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -85,7 +86,7 @@ function From({ isLoaded, onFirstCoordSelect, getFromInput }) {
           name="name"
           required
           autoComplete="off"
-          placeholder="Откуда?"
+          placeholder="🔎 From"
           value={value}
           onChange={handleInput}
         />

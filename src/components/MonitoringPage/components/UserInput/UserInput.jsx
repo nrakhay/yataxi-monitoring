@@ -44,7 +44,7 @@ const UserInput = ({
                 onChange={(e) => handleRateChange(e.target.value)}
               />
               <label htmlFor="econ" className="class-labels">
-                Эконом
+                Econom
               </label>
             </li>
             <li>
@@ -58,7 +58,7 @@ const UserInput = ({
                 onChange={(e) => handleRateChange(e.target.value)}
               />
               <label htmlFor="comf" className="class-labels">
-                Комфорт
+                Comfort
               </label>
             </li>
             <li>
@@ -72,7 +72,7 @@ const UserInput = ({
                 onChange={(e) => handleRateChange(e.target.value)}
               />
               <label htmlFor="comf-plus" className="class-labels">
-                Комфорт+
+                Comfort+
               </label>
             </li>
             <li>
@@ -86,7 +86,7 @@ const UserInput = ({
                 onChange={(e) => handleRateChange(e.target.value)}
               />
               <label htmlFor="business" className="class-labels">
-                Бизнес
+                Business
               </label>
             </li>
           </ul>
@@ -94,7 +94,7 @@ const UserInput = ({
         <div className="submit-container">
           <input
             type="submit"
-            value="Начать мониторинг"
+            value="Start monitoring"
             className="search-button"
           />
         </div>

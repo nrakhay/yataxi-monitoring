@@ -1,19 +1,12 @@
 // import Monitoring from "./components/MonitoringPage/MonitoringPage";
 import "./App.css";
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import heroBackground from "./assets/hero-desktop.png";
 
-import { LoginPopup } from "./components/Landing/LoginPopup";
 import { Monitoring } from "./components/MonitoringPage/MonitoringPage";
 
 function App() {
-  const [loginClicked, setLoginClicked] = useState(false);
-
-  const togglePopup = () => {
-    setLoginClicked(!loginClicked);
-  };
-
   return (
     <BrowserRouter>
       <Routes>
@@ -21,22 +14,16 @@ function App() {
           path="/"
           element={
             <div className="landing-container">
-              {loginClicked ? <LoginPopup toggle={togglePopup} /> : null}
               <header>
                 <div className="nav-container">
                   <a href="/">
                     Site<span>Name</span>
                   </a>
-
                   <div className="topnav">
                     <button href="/about">Why SiteName</button>
-                    <button onClick={togglePopup} href="/login">
-                      Login
-                    </button>
                   </div>
                 </div>
               </header>
-
               <div className="body-wrapper">
                 <div className="body-container">
                   <div className="hero-main">
@@ -66,7 +53,6 @@ function App() {
                   </div>
                 </div>
               </div>
-
               <div className="footer-container">
                 <div className="logo"></div>
                 <div className="author"></div>

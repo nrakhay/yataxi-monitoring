@@ -104,6 +104,7 @@ export const Monitoring = () => {
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault(); // no refresh
+    console.log();
     await axios
       .get(`https://taxi-routeinfo.taxi.yandex.net/taxi_info`, {
         params: {
@@ -161,6 +162,8 @@ export const Monitoring = () => {
             handleCancel,
             rate,
             coordinates,
+            submitted,
+            setSubmitted,
           }}
         />
       )}

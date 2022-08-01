@@ -31,7 +31,7 @@ div {
 }
 
 .user-input {
-  background-color: #a5def1;
+  background-color: white;
   max-width: 360px;
   height: 200px;
   z-index: 9;
@@ -53,6 +53,10 @@ div {
   padding: 3px;
 }
 
+.address input {
+  border: 1px solid gray;
+}
+
 .address-input {
   width: 95%;
   height: 40px;
@@ -65,7 +69,7 @@ div {
   color: black;
 }
 .address-input::placeholder {
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0, 0, 0, 0.7);
   font-size: 16px;
 }
 
@@ -132,10 +136,11 @@ li {
   font-weight: 700;
   font-size: 12px;
   color: black;
+  border: 1px solid gray;
 }
 
 input:checked + label {
-  background: #61a8c9;
+  background: #03cea4;
 }
 
 .submit-container {
@@ -153,6 +158,7 @@ input:checked + label {
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
+  border: 1px solid gray;
 }
 
 .prices {
@@ -162,11 +168,12 @@ input:checked + label {
   align-items: center;
   top: 264px;
   left: 32px;
-  background-color: #a5def1;
+  background-color: white;
   height: 180px;
   width: 360px;
   z-index: 9;
   border-radius: 6px;
+  /* border: 1px solid gray; */
 }
 
 .price-output {
@@ -174,6 +181,7 @@ input:checked + label {
   width: 94%;
   height: 30px;
   background-color: white;
+  border: 1px solid gray;
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
@@ -199,10 +207,11 @@ input:checked + label {
   margin-bottom: 5px;
   width: 48%;
   height: 30px;
-  border: none;
+  border: 1px solid gray;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .redirect-button {

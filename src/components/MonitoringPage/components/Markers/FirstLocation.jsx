@@ -3,7 +3,7 @@ import markerFrom from "../../../../assets/marker.svg";
 
 const FirstLocation = ({ position }) => {
   return (
-    <Marker position={position} draggable={true} icon={{ url: markerFrom }} />
+    <Marker position={position} draggable={false} icon={{ url: markerFrom }} />
   );
 };
 
