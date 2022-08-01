@@ -14,6 +14,7 @@ const Prices = ({
   const CLID_TAXI = process.env.REACT_APP_YATAXI_CLID;
 
   const [updPrice, setUpdPrice] = useState("");
+  const [seconds, setSeconds] = useState(5);
 
   const updatePrice = async () => {
     await axios
@@ -33,15 +34,33 @@ const Prices = ({
       });
   };
 
-  let interval = null;
+  const decrementSeconds = () => {
+    setSeconds((p) => p - 1);
+  };
 
   useEffect(() => {
+    let interval = null;
     if (submitted) {
-      interval = setInterval(updatePrice, 10000);
+      interval = setInterval(updatePrice, 5000);
     }
     return () => clearInterval(interval);
   }, [submitted]);
 
+  let interval = null;
+  useEffect(() => {
+    if (submitted) {
+      interval = setInterval(decrementSeconds, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [interval]);
+
+  useEffect(() => {
+    if (seconds === 0) setSeconds(5);
+  }, [seconds]);
+
+  const secondsCounter = <h4>0:{seconds < 10 ? `0${seconds}` : seconds}</h4>;
+
+  // const renderSeconds = updPrice ? updPrice : <h4>{secondsCounter}</h4>;
   return (
     <div className="component-container prices">
       <div className="price-output current-price-container">
@@ -50,7 +69,8 @@ const Prices = ({
       </div>
       <div className="price-output updated-price-container">
         <h3 className="price-text">Updated price:</h3>
-        <h4>{updPrice} KZT</h4>
+        {updPrice && secondsCounter}
+        <h4>{updPrice ? `${updPrice} KZT` : secondsCounter}</h4>
       </div>
       <div className="price-output min-price">
         <h3 className="price-text">Minimum price:</h3>

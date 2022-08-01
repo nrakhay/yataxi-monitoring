@@ -9,6 +9,7 @@ import Prices from "./components/Prices/Prices";
 
 import getBrowserLocation from "../../utils/geolocation";
 import { middlePoint } from "../../utils/midpoint";
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 import "./Monitoring.css";
 
@@ -42,6 +43,8 @@ export const Monitoring = () => {
   const [minPrice, setMinPrice] = useState("");
   const [startPrice, setStartPrice] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  const { winWidth, winHeight } = useWindowSize();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -104,7 +107,6 @@ export const Monitoring = () => {
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault(); // no refresh
-    console.log();
     await axios
       .get(`https://taxi-routeinfo.taxi.yandex.net/taxi_info`, {
         params: {
@@ -154,19 +156,19 @@ export const Monitoring = () => {
           onSecondCoordSelect,
         }}
       />
-      {submitted && (
-        <Prices
-          {...{
-            minPrice,
-            startPrice,
-            handleCancel,
-            rate,
-            coordinates,
-            submitted,
-            setSubmitted,
-          }}
-        />
-      )}
+      {/* {submitted && ( */}
+      <Prices
+        {...{
+          minPrice,
+          startPrice,
+          handleCancel,
+          rate,
+          coordinates,
+          submitted,
+          setSubmitted,
+        }}
+      />
+      {/* )} */}
     </div>
   );
 };

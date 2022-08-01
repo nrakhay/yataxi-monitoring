@@ -1,5 +1,7 @@
+/* global google */
+
 import { Marker } from "@react-google-maps/api";
-import markerFrom from "../../../../assets/marker.svg";
+import markerFrom from "../../../../assets/point-a.png";
 
 const FirstLocation = ({ position }) => {
   return (

@@ -1,5 +1,5 @@
 import { Marker } from "@react-google-maps/api";
-import markerTo from "../../../../assets/new_flag.svg";
+import markerTo from "../../../../assets/point-b.png";
 
 const SecondLocation = ({ position }) => {
   return (

@@ -167,12 +167,13 @@ input:checked + label {
   justify-content: center;
   align-items: center;
   top: 264px;
-  left: 32px;
   background-color: white;
   height: 180px;
-  width: 360px;
+  max-width: 360px;
   z-index: 9;
   border-radius: 6px;
+  margin: 0 32px 32px 32px;
+  /* margin: px; */
   /* border: 1px solid gray; */
 }
 
