@@ -4,7 +4,7 @@ import axios from "axios";
 const Prices = ({
   minPrice,
   startPrice,
-  handleCancel,
+  handleSearchCancel,
   rate,
   coordinates,
   submitted,
@@ -77,11 +77,7 @@ const Prices = ({
         <h4>{minPrice} KZT</h4>
       </div>
       <div className="price-buttons">
-        <input
-          type="submit"
-          value={"Cancel"}
-          onClick={() => setSubmitted(false)}
-        />
+        <input type="submit" value={"Cancel"} onClick={handleSearchCancel} />
         <input type="submit" value={"Open"} className="redirect-button" />
       </div>
     </div>

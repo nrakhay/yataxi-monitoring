@@ -1,3 +1,5 @@
+/* global google */
+
 import { useState, useEffect } from "react";
 
 import axios from "axios";
@@ -9,7 +11,6 @@ import Prices from "./components/Prices/Prices";
 
 import getBrowserLocation from "../../utils/geolocation";
 import { middlePoint } from "../../utils/midpoint";
-import { useWindowSize } from "../../hooks/useWindowSize";
 
 import "./Monitoring.css";
 
@@ -43,8 +44,7 @@ export const Monitoring = () => {
   const [minPrice, setMinPrice] = useState("");
   const [startPrice, setStartPrice] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
-  const { winWidth, winHeight } = useWindowSize();
+  const [directionsResponse, setDirectionsResponse] = useState(null);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -99,11 +99,19 @@ export const Monitoring = () => {
     setRate(val);
   };
 
-  const handleCancel = () => {
-    setSubmitted(false);
-  };
-
   const coordinates = fromLng + "," + fromLat + "~" + toLng + "," + toLat;
+
+  const calculateDirections = async () => {
+    const directionsService = new google.maps.DirectionsService();
+
+    const results = await directionsService.route({
+      origin: new google.maps.LatLng(fromLat, fromLng),
+      destination: new google.maps.LatLng(toLat, toLng),
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+
+    setDirectionsResponse(results);
+  };
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault(); // no refresh
@@ -125,6 +133,12 @@ export const Monitoring = () => {
       });
 
     setSubmitted(true);
+    calculateDirections();
+  };
+
+  const handleSearchCancel = () => {
+    setSubmitted(false);
+    setDirectionsResponse(null);
   };
 
   return (
@@ -139,6 +153,7 @@ export const Monitoring = () => {
             zoom,
             fromInput,
             toInput,
+            directionsResponse,
           }}
         />
       ) : (
@@ -156,19 +171,20 @@ export const Monitoring = () => {
           onSecondCoordSelect,
         }}
       />
-      {/* {submitted && ( */}
-      <Prices
-        {...{
-          minPrice,
-          startPrice,
-          handleCancel,
-          rate,
-          coordinates,
-          submitted,
-          setSubmitted,
-        }}
-      />
-      {/* )} */}
+
+      {submitted && (
+        <Prices
+          {...{
+            minPrice,
+            startPrice,
+            handleSearchCancel,
+            rate,
+            coordinates,
+            submitted,
+            setSubmitted,
+          }}
+        />
+      )}
     </div>
   );
 };
