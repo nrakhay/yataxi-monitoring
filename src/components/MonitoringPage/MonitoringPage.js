@@ -8,9 +8,11 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import UserInput from "./components/UserInput/UserInput";
 import Map from "./components/Map/Map";
 import Prices from "./components/Prices/Prices";
+import { PopupMonitoring } from "./components/PopupMonitoring/PopupMonitoring";
 
 import getBrowserLocation from "../../utils/geolocation";
 import { middlePoint } from "../../utils/midpoint";
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 import "./Monitoring.css";
 
@@ -45,6 +47,10 @@ export const Monitoring = () => {
   const [startPrice, setStartPrice] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [closePopup, setClosePopup] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const { winWidth, winHeight } = useWindowSize();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -132,6 +138,10 @@ export const Monitoring = () => {
         setStartPrice(response.data.options[0].price);
       });
 
+    if (winWidth <= 480) {
+      setIsMobile(true);
+    }
+
     setSubmitted(true);
     calculateDirections();
   };
@@ -140,6 +150,43 @@ export const Monitoring = () => {
     setSubmitted(false);
     setDirectionsResponse(null);
   };
+
+  const handleClosePopup = () => {
+    setClosePopup(true);
+  };
+
+  const userInput = (
+    <UserInput
+      {...{
+        isLoaded,
+        getFromInput,
+        getToInput,
+        handleRateChange,
+        handleSearchSubmit,
+        rate,
+        onFirstCoordSelect,
+        onSecondCoordSelect,
+      }}
+    />
+  );
+
+  const prices = (
+    <Prices
+      {...{
+        minPrice,
+        startPrice,
+        handleSearchCancel,
+        rate,
+        coordinates,
+        submitted,
+        setSubmitted,
+        fromLat,
+        fromLng,
+        toLat,
+        toLng,
+      }}
+    />
+  );
 
   return (
     <div className="main-container">
@@ -159,32 +206,11 @@ export const Monitoring = () => {
       ) : (
         <h2>Loading</h2>
       )}
-      <UserInput
-        {...{
-          isLoaded,
-          getFromInput,
-          getToInput,
-          handleRateChange,
-          handleSearchSubmit,
-          rate,
-          onFirstCoordSelect,
-          onSecondCoordSelect,
-        }}
-      />
 
-      {submitted && (
-        <Prices
-          {...{
-            minPrice,
-            startPrice,
-            handleSearchCancel,
-            rate,
-            coordinates,
-            submitted,
-            setSubmitted,
-          }}
-        />
-      )}
+      {submitted && isMobile ? prices : userInput}
+      {submitted && !isMobile && prices}
+
+      {/* {!closePopup && <PopupMonitoring handleClosePopup={handleClosePopup} />} */}
     </div>
   );
 };

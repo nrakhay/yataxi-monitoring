@@ -8,7 +8,10 @@ const Prices = ({
   rate,
   coordinates,
   submitted,
-  setSubmitted,
+  fromLat,
+  fromLng,
+  toLat,
+  toLng,
 }) => {
   const API_TAXI = process.env.REACT_APP_YATAXI_API;
   const CLID_TAXI = process.env.REACT_APP_YATAXI_CLID;
@@ -78,10 +81,19 @@ const Prices = ({
       </div>
       <div className="price-buttons">
         <input type="submit" value={"Cancel"} onClick={handleSearchCancel} />
-        <input type="submit" value={"Open"} className="redirect-button" />
+        {/* <input type="submit" value={"Open"} className="redirect-button" /> */}
+        <a
+          className="redirect-button"
+          target="_blank"
+          href={`https://3.redirect.appmetrica.yandex.com/route?start-lat=${fromLat}&start-lon=${fromLng}&end-lat=${toLat}&end-lon=${toLng}&level=${rate}&appmetrica_tracking_id=25395763362139037`}
+        >
+          <p>Open</p>
+        </a>
       </div>
     </div>
   );
 };
 
 export default Prices;
+
+// href={`https://3.redirect.appmetrica.yandex.com/route?start-lat=${fromLat}&start-lon=${fromLng}&end-lat=${toLat}&end-lon=${toLng}&level=${rate}&appmetrica_tracking_id=25395763362139037`}
