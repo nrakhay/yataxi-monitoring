@@ -17,7 +17,7 @@ function App() {
               <header>
                 <div className="nav-container">
                   <a href="/">
-                    Site<span>Name</span>
+                    Save<span>Up</span>
                   </a>
                   <div className="topnav">
                     <button href="/about">Why SiteName</button>
