@@ -1,9 +1,10 @@
 /* global google */
 import { useRef, useCallback, useEffect, useState } from "react";
-import { GoogleMap, DirectionsRenderer } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 import { Theme } from "./Theme";
 import FirstLocation from "../Markers/FirstLocation";
 import SecondLocation from "../Markers/SecondLocation";
+// import Direction from "../../Direction/Direction";
 
 import { useWindowSize } from "../../../../hooks/useWindowSize";
 
@@ -33,12 +34,12 @@ const Map = ({
   pointA,
   pointB,
   zoom,
-  directionsResponse,
+  fromInput,
+  toInput,
 }) => {
   const { winWidth, winHeight } = useWindowSize();
-  const mapRef = useRef();
 
-  const [isMounted, setIsMounted] = useState(false);
+  const mapRef = useRef();
 
   const onLoad = useCallback(function callback(map) {
     mapRef.current = map;
@@ -47,6 +48,8 @@ const Map = ({
   const onUnmount = useCallback(function callback(map) {
     mapRef.current = undefined;
   }, []);
+
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -108,12 +111,9 @@ const Map = ({
       >
         {isMounted && <FirstLocation position={pointA} />}
         {isMounted && <SecondLocation position={pointB} />}
-        {directionsResponse && (
-          <DirectionsRenderer
-            directions={directionsResponse}
-            suppressMarkers={true}
-          />
-        )}
+        {/* {fromInput && toInput && (
+          <Direction fromInput={fromInput} toInput={toInput} />
+        )} */}
       </GoogleMap>
     </div>
   );

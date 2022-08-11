@@ -17,10 +17,10 @@ function App() {
               <header>
                 <div className="nav-container">
                   <a href="/">
-                    Save<span>Up</span>
+                    Site<span>Name</span>
                   </a>
                   <div className="topnav">
-                    <button href="/about">KASPI: 87075336934</button>
+                    <button href="/about">Why SiteName</button>
                   </div>
                 </div>
               </header>

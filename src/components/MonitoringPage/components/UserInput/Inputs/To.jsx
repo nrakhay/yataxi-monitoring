@@ -5,6 +5,8 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
+import markerTo from "../../../../../assets/new_flag.svg";
+
 function To({ isLoaded, onSecondCoordSelect, getToInput }) {
   const {
     value,

@@ -1,5 +1,3 @@
-/* global google */
-
 import { useState, useEffect } from "react";
 
 import axios from "axios";
@@ -8,11 +6,9 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import UserInput from "./components/UserInput/UserInput";
 import Map from "./components/Map/Map";
 import Prices from "./components/Prices/Prices";
-import { PopupMonitoring } from "./components/PopupMonitoring/PopupMonitoring";
 
 import getBrowserLocation from "../../utils/geolocation";
 import { middlePoint } from "../../utils/midpoint";
-import { useWindowSize } from "../../hooks/useWindowSize";
 
 import "./Monitoring.css";
 
@@ -46,11 +42,6 @@ export const Monitoring = () => {
   const [minPrice, setMinPrice] = useState("");
   const [startPrice, setStartPrice] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [closePopup, setClosePopup] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  const { winWidth, winHeight } = useWindowSize();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -105,22 +96,15 @@ export const Monitoring = () => {
     setRate(val);
   };
 
-  const coordinates = fromLng + "," + fromLat + "~" + toLng + "," + toLat;
-
-  const calculateDirections = async () => {
-    const directionsService = new google.maps.DirectionsService();
-
-    const results = await directionsService.route({
-      origin: new google.maps.LatLng(fromLat, fromLng),
-      destination: new google.maps.LatLng(toLat, toLng),
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
-
-    setDirectionsResponse(results);
+  const handleCancel = () => {
+    setSubmitted(false);
   };
+
+  const coordinates = fromLng + "," + fromLat + "~" + toLng + "," + toLat;
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault(); // no refresh
+    console.log();
     await axios
       .get(`https://taxi-routeinfo.taxi.yandex.net/taxi_info`, {
         params: {
@@ -138,55 +122,8 @@ export const Monitoring = () => {
         setStartPrice(response.data.options[0].price);
       });
 
-    if (winWidth <= 480) {
-      setIsMobile(true);
-    }
-
     setSubmitted(true);
-    calculateDirections();
   };
-
-  const handleSearchCancel = () => {
-    setSubmitted(false);
-    setDirectionsResponse(null);
-  };
-
-  const handleClosePopup = () => {
-    setClosePopup(true);
-  };
-
-  const userInput = (
-    <UserInput
-      {...{
-        isLoaded,
-        getFromInput,
-        getToInput,
-        handleRateChange,
-        handleSearchSubmit,
-        rate,
-        onFirstCoordSelect,
-        onSecondCoordSelect,
-      }}
-    />
-  );
-
-  const prices = (
-    <Prices
-      {...{
-        minPrice,
-        startPrice,
-        handleSearchCancel,
-        rate,
-        coordinates,
-        submitted,
-        setSubmitted,
-        fromLat,
-        fromLng,
-        toLat,
-        toLng,
-      }}
-    />
-  );
 
   return (
     <div className="main-container">
@@ -200,17 +137,36 @@ export const Monitoring = () => {
             zoom,
             fromInput,
             toInput,
-            directionsResponse,
           }}
         />
       ) : (
         <h2>Loading</h2>
       )}
-
-      {submitted && isMobile ? prices : userInput}
-      {submitted && !isMobile && prices}
-
-      {/* {!closePopup && <PopupMonitoring handleClosePopup={handleClosePopup} />} */}
+      <UserInput
+        {...{
+          isLoaded,
+          getFromInput,
+          getToInput,
+          handleRateChange,
+          handleSearchSubmit,
+          rate,
+          onFirstCoordSelect,
+          onSecondCoordSelect,
+        }}
+      />
+      {submitted && (
+        <Prices
+          {...{
+            minPrice,
+            startPrice,
+            handleCancel,
+            rate,
+            coordinates,
+            submitted,
+            setSubmitted,
+          }}
+        />
+      )}
     </div>
   );
 };

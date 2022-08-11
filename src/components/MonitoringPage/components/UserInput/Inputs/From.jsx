@@ -1,4 +1,5 @@
 import React from "react";
+import markerFrom from "../../../../../assets/marker.svg";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
